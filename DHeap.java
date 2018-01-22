@@ -45,10 +45,10 @@ public class DHeap
     public int arrayToHeap(DHeap_Item[] array1) 
     {   
         int comp = 0;
-        for(int i = 0; i < array1.length; i++) {
+        for (int i = 0; i < array1.length; i++) {
             array[i] = array1[i];
         }
-        for(int i = parent(this.getSize(), this.d); i >= 0; i--) { //runs through all parent nodes
+        for (int i = parent(this.getSize() - 1, this.d); i >= 0; i--) { //runs through all parent nodes
             comp += heapifyDown(i);
         }
         return comp;
@@ -75,10 +75,10 @@ public class DHeap
         int comp = 0;
         int smallest = i;
         for (int t = child(i, 1, this.d); t <= child(i, this.d, this.d); t++) {
-            if (t > this.size) {
+            if (t > this.getSize()) {
                 break; // we reached the end of the heap
             }
-            if (t <= size && this.array[t].getKey() < this.array[smallest].getKey()) {
+            if (t <= this.getSize() && this.array[t].getKey() < this.array[smallest].getKey()) {
                 smallest = t;
             }
             comp++;
@@ -95,6 +95,26 @@ public class DHeap
         return comp;
     }
 
+    /**
+     * HeapifyUp()
+     * 
+     */
+    public int heapifyUp(int i) {
+        int comp = 0;
+        while (i > 0 && this.array[i].getKey() < this.array[parent(i, this.d)].getKey()) {
+            int parPos = parent(i, this.d);
+            DHeap_Item temp = this.array[i];
+            this.array[i] = this.array[parPos];
+            this.array[i].setPos(i);
+            this.array[parPos] = temp;
+            this.array[parPos].setPos(parPos);
+            i = parPos;
+            comp++;
+        }
+        return comp;
+    }
+
+    
  /**
      * public static int parent(i,d), child(i,k,d)
      * (2 methods)
@@ -146,9 +166,9 @@ public class DHeap
     public int Delete_Min()
     {
         int comp = 0;
-        this.array[0] = this.array[this.getSize()];
+        this.array[0] = this.array[this.getSize() - 1];
         this.array[0].setPos(0);
-        this.setSize(this.getSize()-1);
+        this.setSize(this.getSize() - 1);
         comp += heapifyDown(0);
         return comp;
     }
@@ -184,7 +204,12 @@ public class DHeap
      */
     public int Decrease_Key(DHeap_Item item, int delta)
     {
-	return;// should be replaced by student code
+        int comp = 0;
+        item.setKey(item.getKey() - delta);
+
+        comp += heapifyUp(item.getPos());
+
+        return comp;
     }
 	
 	  /**
@@ -201,7 +226,20 @@ public class DHeap
      */
     public int Delete(DHeap_Item item)
     {
-	return;// should be replaced by student code
+        if (item.getPos() >= this.getSize() - 1) { // last item is being deleted no comparisons
+            this.setSize(this.getSize() - 1);
+            return 0;
+        }
+        
+        int comp = 0;
+        DHeap_Item temp = this.array[this.getSize() - 1];
+        this.array[item.getPos()] = temp;
+        temp.setPos(item.getPos());
+        this.setSize(this.getSize() - 1);
+        
+        comp += heapifyDown(temp.getPos());
+
+        return comp;
     }
 	
 	/**
