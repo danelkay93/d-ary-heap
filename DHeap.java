@@ -64,7 +64,34 @@ public class DHeap
      */
     public boolean isHeap() 
     {
-        return false; // just for illustration - should be replaced by student code
+         if (this.getSize() == 0) {
+             return true;
+         }
+         
+        return isSubHeap(0);
+    }
+
+    public boolean isSubHeap(int parIndex) {
+        
+        for (int i = child(parIndex, 1, this.d); i <= child(parIndex, d, this.d); i++) {
+            if (i >= this.getSize()) {
+                break;
+            }
+            if (this.array[parIndex].getKey() > this.array[i].getKey()) {
+                return false;
+            }
+        }
+        
+        for (int i = child(parIndex, 1, this.d); i <= child(parIndex, d, this.d); i++) {
+            if (i >= this.getSize()) {
+                break;
+            }
+            if (!isSubHeap(i)) {
+                return false;
+            }
+        }
+
+        return true;
     }
     
     /** 
@@ -261,7 +288,7 @@ public class DHeap
 	*/
 	public static int DHeapSort(int[] array1, int d) {
         int comp = 0;
-        DHeap sortedHeap = new DHeap(d, arrary1.length);
+        DHeap sortedHeap = new DHeap(d, array1.length);
         DHeap_Item[] itemArr = new DHeap_Item[array1.length];
         
         for(int i = 0; i < array1.length; i++) {
@@ -276,5 +303,12 @@ public class DHeap
             comp += sortedHeap.Delete_Min();
         }    
         return comp;
+    }
+    
+    public void printHeap() {
+		for (int i = 0; i < getSize(); i++) {
+			System.out.print(array[i].getKey() + ", ");
+		}
+		System.out.print("\n");
 	}
 }
