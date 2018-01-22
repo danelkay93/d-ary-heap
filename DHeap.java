@@ -48,6 +48,7 @@ public class DHeap
         for (int i = 0; i < array1.length; i++) {
             array[i] = array1[i];
         }
+        this.setSize(array1.length);
         for (int i = parent(this.getSize() - 1, this.d); i >= 0; i--) { //runs through all parent nodes
             comp += heapifyDown(i);
         }
@@ -75,10 +76,10 @@ public class DHeap
         int comp = 0;
         int smallest = i;
         for (int t = child(i, 1, this.d); t <= child(i, this.d, this.d); t++) {
-            if (t > this.getSize()) {
+            if (t >= this.getSize()) {
                 break; // we reached the end of the heap
             }
-            if (t <= this.getSize() && this.array[t].getKey() < this.array[smallest].getKey()) {
+            if (t < this.getSize() && this.array[t].getKey() < this.array[smallest].getKey()) {
                 smallest = t;
             }
             comp++;
@@ -148,8 +149,15 @@ public class DHeap
     * postcondition: isHeap()
     */
     public int Insert(DHeap_Item item) 
-    {        
-    	return;// should be replaced by student code
+    {
+        int comp = 0;
+        this.array[getSize()] = item;
+        item.setPos(getSize());
+        this.setSize(this.getSize() + 1);
+
+        comp += heapifyUp(item.getPos());
+        
+        return comp;
     }
 
  /**
@@ -252,6 +260,21 @@ public class DHeap
 	* postcondition: array1 is sorted 
 	*/
 	public static int DHeapSort(int[] array1, int d) {
-		return;
+        int comp = 0;
+        DHeap sortedHeap = new DHeap(d, arrary1.length);
+        DHeap_Item[] itemArr = new DHeap_Item[array1.length];
+        
+        for(int i = 0; i < array1.length; i++) {
+            itemArr[i] = new DHeap_Item("Key: " + array1[i], array1[i]);
+            itemArr[i].setPos(i);
+        }
+
+        comp += sortedHeap.arrayToHeap(itemArr);
+
+        for (int i = 0; sortedHeap.getSize() != 0; i++) {
+            array1[i] = sortedHeap.Get_Min().getKey();
+            comp += sortedHeap.Delete_Min();
+        }    
+        return comp;
 	}
 }
