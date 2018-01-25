@@ -5,8 +5,8 @@
 public class DHeap
 {
 	
-    private int size, max_size, d;
-    private DHeap_Item[] array;
+    public int size, max_size, d;
+    public DHeap_Item[] array;
 
 	// Constructor
 	// m_d >= 2, m_size > 0
@@ -45,10 +45,15 @@ public class DHeap
     public int arrayToHeap(DHeap_Item[] array1) 
     {   
         int comp = 0;
+        this.size = 0;
         for (int i = 0; i < array1.length; i++) {
-            array[i] = array1[i];
+            this.array[i] = array1[i];
+            if (this.array[i] != null) {
+                this.array[i].setPos(i);
+                this.size += 1;
+            }
         }
-        this.setSize(array1.length);
+//        this.setSize(array1.length);
         for (int i = parent(this.getSize() - 1, this.d); i >= 0; i--) { //runs through all parent nodes
             comp += heapifyDown(i);
         }
@@ -117,7 +122,6 @@ public class DHeap
             this.array[i].setPos(i);
             this.array[smallest] = temp;
             this.array[smallest].setPos(smallest);
-            comp += heapifyDown(smallest);
         }
 
         return comp;
