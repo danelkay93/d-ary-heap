@@ -18,13 +18,17 @@ public class DHeap
     }
 	
 	/**
-	 * public int getSize()
-	 * Returns the number of elements in the heap.
+     * Return the number of elements in the heap
+	 * @return Returns the number of elements in the heap.
 	 */
 	public int getSize() {
 		return size;
     }
-    
+
+    /**
+     * Set the number of elements in the heap
+     * @param newSize The new number of elements in the heap.
+     */
     public void setSize(int newSize) {
         if (newSize > this.max_size) {
             return;
@@ -33,17 +37,15 @@ public class DHeap
     }
 	
   /**
-     * public int arrayToHeap()
-     *
      * The function builds a new heap from the given array.
      * Previous data of the heap should be erased.
-     * preconidtion: array1.length() <= max_size
      * postcondition: isHeap()
      * 				  size = array.length()
-     * Returns number of comparisons along the function run. 
+     * @param array1 The array to build a new heap from.
+   * @return Returns number of comparisons along the function run.
 	 */
-    public int arrayToHeap(DHeap_Item[] array1) 
-    {   
+    public int arrayToHeap(DHeap_Item[] array1)
+    {
         int comp = 0;
         this.size = 0;
         for (int i = 0; i < array1.length; i++) {
@@ -61,23 +63,25 @@ public class DHeap
     }
 
     /**
-     * public boolean isHeap()
-     *
-     * The function returns true if and only if the D-ary tree rooted at array[0]
+     * @return The function returns true if and only if the D-ary tree rooted at array[0]
      * satisfies the heap property or has size == 0.
-     *   
      */
-    public boolean isHeap() 
+    public boolean isHeap()
     {
          if (this.getSize() == 0) {
              return true;
          }
-         
+
         return isSubHeap(0);
     }
 
+    /**
+     * The function checks if the subheap with the parIndex-th element of the parent heap is a valid heap.
+     * @param parIndex The node to use as a root node for the subheap
+     * @return True if the subheap satisfies the heap property, False otherwise.
+     */
     public boolean isSubHeap(int parIndex) {
-        
+
         for (int i = child(parIndex, 1, this.d); i <= child(parIndex, d, this.d); i++) {
             if (i >= this.getSize()) {
                 break;
@@ -86,7 +90,7 @@ public class DHeap
                 return false;
             }
         }
-        
+
         for (int i = child(parIndex, 1, this.d); i <= child(parIndex, d, this.d); i++) {
             if (i >= this.getSize()) {
                 break;
@@ -98,12 +102,13 @@ public class DHeap
 
         return true;
     }
-    
-    /** 
-     * heapifyDown()
-     * 
+
+    /**
+     * Rearrange nodes in the heap to fulfill the heap property again.
+     * @param i The heap element that is out of place
+     *          @return The number of comparison operations performed.
      */
-    public int heapifyDown(int i) 
+    public int heapifyDown(int i)
     {
         int comp = 0;
         int smallest = i;
@@ -128,8 +133,9 @@ public class DHeap
     }
 
     /**
-     * HeapifyUp()
-     * 
+     * Rearrange nodes in the heap so that a newly inserted element ends up in the correct position.
+     * @param i The position of the newly inserted heap element
+     *          @return The number of comparison operations performed.
      */
     public int heapifyUp(int i) {
         int comp = 0;
@@ -146,40 +152,36 @@ public class DHeap
         return comp;
     }
 
-    
- /**
-     * public static int parent(i,d), child(i,k,d)
-     * (2 methods)
-     *
-     * precondition: i >= 0, d >= 2, 1 <= k <= d
-     *
-     * The methods compute the index of the parent and the k-th child of 
-     * vertex i in a complete D-ary tree stored in an array. 
-     * Note that indices of arrays in Java start from 0.
+    /**
+     * Find the parent node of the node at position i assuming a d-ary heap
+     * @param i The position of the node whose parent the method will find
+     * @param d The number of children for each parent node, assuming a full heap
+     * @return The position of the parent of the i-th node
      */
-    public static int parent(int i, int d) 
-    { 
+    public static int parent(int i, int d)
+    {
         return (i - 1) / d;
     }
-    
-    public static int child (int i, int k, int d) 
-    { 
+
+    /**
+     * Find the k-th child node of the i-th node assuming a d-ary heap
+     * @param i The position of the node whose child the method will find
+     * @param k Among the i-th nodes children, the index of the node to find
+     * @param d The number of children for each parent node, assuming a full heap
+     * @return The position of the k-th child of the i-th node
+     */
+    public static int child (int i, int k, int d)
+    {
         return (i * d) + k;
     }
 
     /**
-    * public int Insert(DHeap_Item item)
-    *
 	* Inserts the given item to the heap.
-	* Returns number of comparisons during the insertion.
-	*
-    * precondition: item != null
-    *               isHeap()
-    *               size < max_size
-    * 
     * postcondition: isHeap()
+     * @return The number of comparisons performed during the insertion.
+     * @param item The DHeap_Item to insert
     */
-    public int Insert(DHeap_Item item) 
+    public int Insert(DHeap_Item item)
     {
         int comp = 0;
         this.array[getSize()] = item;
@@ -187,20 +189,14 @@ public class DHeap
         this.setSize(this.getSize() + 1);
 
         comp += heapifyUp(item.getPos());
-        
+
         return comp;
     }
 
  /**
-    * public int Delete_Min()
-    *
 	* Deletes the minimum item in the heap.
-	* Returns the number of comparisons made during the deletion.
-    * 
-	* precondition: size > 0
-    *               isHeap()
-    * 
     * postcondition: isHeap()
+  * @return Returns the number of comparisons made during the deletion.
     */
     public int Delete_Min()
     {
@@ -214,32 +210,21 @@ public class DHeap
 
 
     /**
-     * public DHeap_Item Get_Min()
-     *
-	 * Returns the minimum item in the heap.
-	 *
-     * precondition: heapsize > 0
-     *               isHeap()
-     *		size > 0
-     * 
+     * Get the item in the heap with the smallest key
      * postcondition: isHeap()
+     * @return The minimum item in the heap.
      */
     public DHeap_Item Get_Min()
     {
-	    return array[0]; // should be replaced by student code
+	    return array[0];
     }
-	
+
   /**
-     * public int Decrease_Key(DHeap_Item item, int delta)
-     *
-	 * Decerases the key of the given item by delta.
-	 * Returns number of comparisons made as a result of the decrease.
-	 *
-     * precondition: item.pos < size;
-     *               item != null
-     *               isHeap()
-     * 
+	 * Decreases the key of the given item by delta.
      * postcondition: isHeap()
+   * @return Returns number of comparison operations made as a result of the decrease.
+   * @param item The item whose key will be decreased
+   *             @param delta The delta by which the item's key will be decreased
      */
     public int Decrease_Key(DHeap_Item item, int delta)
     {
@@ -250,18 +235,12 @@ public class DHeap
 
         return comp;
     }
-	
+
 	  /**
-     * public int Delete(DHeap_Item item)
-     *
 	 * Deletes the given item from the heap.
-	 * Returns number of comparisons during the deletion.
-	 *
-     * precondition: item.pos < size;
-     *               item != null
-     *               isHeap()
-     * 
      * postcondition: isHeap()
+       * @return Returns number of comparisons during the deletion.
+       * @param item The heap item to delete
      */
     public int Delete(DHeap_Item item)
     {
@@ -269,26 +248,26 @@ public class DHeap
             this.setSize(this.getSize() - 1);
             return 0;
         }
-        
+
         int comp = 0;
         DHeap_Item temp = this.array[this.getSize() - 1];
         this.array[item.getPos()] = temp;
         temp.setPos(item.getPos());
         this.setSize(this.getSize() - 1);
-        
+
         comp += heapifyDown(temp.getPos());
 
         return comp;
     }
-	
+
 	/**
-	* Sort the input array using heap-sort (build a heap, and 
+	* Sort the input array using heap-sort (build a heap, and
 	* perform n times: get-min, del-min).
 	* Sorting should be done using the DHeap, name of the items is irrelevant.
-	* 
-	* Returns the number of comparisons performed.
-	* 
-	* postcondition: array1 is sorted 
+	* postcondition: array1 is sorted
+     * @return Returns the number of comparisons performed.
+     * @param array1 The input array to sort
+     *               @param d The type of heap to sort the array as
 	*/
 	public static int DHeapSort(int[] array1, int d) {
         int comp = 0;
@@ -308,7 +287,10 @@ public class DHeap
         }    
         return comp;
     }
-    
+
+    /**
+     * Print each item in the heap
+     */
     public void printHeap() {
 		for (int i = 0; i < getSize(); i++) {
 			System.out.print(array[i].getKey() + ", ");
