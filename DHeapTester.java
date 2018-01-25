@@ -51,7 +51,7 @@ public class DHeapTester
 			_keys = new ArrayList<Integer>();
 			
 			int d = r.nextInt(19)+2; // 2-20
-			_heap = new DHeap(2, totalNumOfOperations*2);
+			_heap = new DHeap(d, totalNumOfOperations*2);
 		}
 		public Test(int d, String preOperations) throws Exception
 		{
@@ -128,7 +128,7 @@ public class DHeapTester
 			_maxOperations = _operations.size();
 			_keys = new ArrayList<Integer>();
 			
-			_heap = new DHeap(2, _operations.size()*2);
+			_heap = new DHeap(d, _operations.size()*2);
 		}
 		public ErrorCode RunTest()
 		{
